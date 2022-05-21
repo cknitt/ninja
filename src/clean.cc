@@ -142,17 +142,17 @@ void Cleaner::CleanDead(const BuildLog::Entries& entries) {
   }
 
   if (!staleFiles.empty()) {
-    printf("Staled output removed\n");
+    printf("Stale output removed\n");
     if (!state_->cleaner.empty()) {
-      vector<string> staled_cm;
+      vector<string> stale_cm;
       for (set<string>::const_iterator i = staleFiles.begin();
            i != staleFiles.end(); ++i) {
         if (StringPiece::getCmjSuffix().IsSuffix(*i)) {
-          staled_cm.push_back(*i);
+          stale_cm.push_back(*i);
         }
       }
-      for (size_t i = 0; i < staled_cm.size(); ++i) {
-        string& cmj = staled_cm[i]; 
+      for (size_t i = 0; i < stale_cm.size(); ++i) {
+        string& cmj = stale_cm[i]; 
         cmj[cmj.size() - 1] = 't';
         RemoveFile(cmj);
         string command = state_->cleaner + " -cmt-rm " + cmj;
