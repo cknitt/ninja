@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ g_rescript ]
+  pull_request:
+    branches: [ g_rescript ]
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: ninja
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Run snapshot.js
+      run: |
+        node createBinDir.js
+        node snapshot.js
+      working-directory: ninja
