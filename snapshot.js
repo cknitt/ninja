@@ -4,12 +4,13 @@ var fs = require("fs");
 var os = require("os");
 const path = require("path");
 var platform = process.platform;
-var command = "python configure.py --bootstrap --verbose";
+
 function build() {
   if (platform === "win32") {
-    // running on visual studio command line
+    var command = "python configure.py --bootstrap --verbose --platform mingw";
     child.execSync(command, { cwd: __dirname });
   } else {
+    var command = "python configure.py --bootstrap --verbose";
     if (platform === "darwin") {
       process.env["CXXFLAGS"] = "-flto";
     }
