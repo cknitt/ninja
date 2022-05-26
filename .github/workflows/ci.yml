@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ dev, g_rescript ]
+  pull_request:
+    branches: [ dev, g_rescript ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: ninja
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: "Windows: Use MSVC"
+      if: runner.os == 'Windows'
+      uses: TheMrMilchmann/setup-msvc-dev@v1
+      with:
+        arch: x64
+
+    - name: Run snapshot.js
+      run: |
+        node createBinDir.js
+        node snapshot.js
+      working-directory: ninja
+
+    - name: Get artifact info
+      id: get_artifact_info
+      run: node ninja/.github/workflows/get_artifact_info.js
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ steps.get_artifact_info.outputs.artifact_name }}
+        path: ${{ steps.get_artifact_info.outputs.artifact_path }}
