@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ dev, g_rescript ]
+    branches: [ rescript ]
   pull_request:
-    branches: [ dev, g_rescript ]
+    branches: [ rescript ]
 
 jobs:
   build:
